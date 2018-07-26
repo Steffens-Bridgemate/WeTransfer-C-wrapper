@@ -1,6 +1,6 @@
 # WeTransfer-C-wrapper
-Provides the source code for a C# wrapper around the WeTransfer public API
-Use as follows:
+Provides the source code for a C# wrapper around the WeTransfer public API<br/>
+Use as follows:<br/>
 The Program.cs file in the Console application gives an example how to use the Communicator class.
  // Fill in your API-key and the directory where the chunks for partial upload can be created.
   var uploader = new Communicator(apiKey: "your_secret_API_key",
