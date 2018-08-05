@@ -1,4 +1,4 @@
-# WeTransfer-C-wrapper
+# WeTransfer-C#-wrapper
 Provides the source code for a C# wrapper around the WeTransfer public API<br/>
 Use as follows:<br/>
 The Program.cs file in the Console application gives an example how to use the Communicator class.<br/>
