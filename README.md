@@ -4,7 +4,7 @@ Use as follows:<br/>
 The Program.cs file in the Console application gives an example how to use the Communicator class.<br/>
  // Fill in your API-key and the directory where the chunks for partial upload can be created.<br/>
   var uploader = new Communicator(apiKey: "your_secret_API_key",<br/>
-                                  chunkDirectory:@"The directory you want to use to store chucks of split files.");<br/>
+                                  chunkDirectory:@"The directory you want to use to store chuncks of split files.");<br/>
   <br/>
   var progress = new Progress<ProgressReport>();<br/>
   progress.ProgressChanged += (sender,report) => Console.WriteLine($"{report.Message}: {report.Percentage}");<br/>
