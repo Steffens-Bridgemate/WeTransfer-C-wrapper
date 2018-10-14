@@ -16,7 +16,7 @@ namespace V2Tests
     public class V2Tests
     {
 
-        private const string ApiKey= "dc6NQTPKkR1qylk82Le622OICFayEY0s6rpvQYM7";
+        private const string ApiKey= "Fill in your own API-key here";
         private CommunicatorV2 _communicator;
         private string _appPath;
         private string _user;

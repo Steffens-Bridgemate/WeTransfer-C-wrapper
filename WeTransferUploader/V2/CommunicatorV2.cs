@@ -73,6 +73,7 @@ namespace WeTransferUploader.V2
         /// </summary>
         /// <param name="fullPaths">A collection of paths for the transfer</param>
         /// <param name="requestName">The (arbitrary) name for the transfer</param>
+        /// <param name="user">The name of the user that will obtain the token. Is mainly iseful for creating Boards.</param>
         /// <param name="progress">An optional parameter to report back progress to the calling code.</param>
         /// <returns></returns>
         public async Task<UploadResultV2> UploadFiles(IEnumerable<string> fullPaths,
@@ -91,7 +92,6 @@ namespace WeTransferUploader.V2
             if (string.IsNullOrEmpty(user))
                 throw new ArgumentNullException(nameof(user));
             //
-
 
             UploadResultV2.Stage currentStage = UploadResultV2.Stage.NotSet;
             try
@@ -118,11 +118,14 @@ namespace WeTransferUploader.V2
 
                 //Calculate the filesizes in order to report correct progress
                 var fileInfos = new List<FileInfo>();
+
+                //Create the data for the files that must be uploaded.
                 var fileRequests = new List<FileRequestContent>();
                 foreach (var file in fullPaths)
                 {
                     var info = new FileInfo(file);
                     fileInfos.Add(info);
+
                     var fileRequest = new FileRequestContent(info.Name,(int) info.Length,info.FullName);
                     fileRequests.Add(fileRequest);
                 }
@@ -178,6 +181,15 @@ namespace WeTransferUploader.V2
 
         }
 
+        /// <summary>
+        /// Uploads a single file by requesting upload urls for each chunk, splitting the file according to the specified chunk size, uploading each chunk and signaling to the API that the file upload is complete.
+        /// </summary>
+        /// <param name="transferId">The id of the entire tranfser</param>
+        /// <param name="singleFileTransferData">Data for the file that must be uploaded</param>
+        /// <param name="progress">Used to report back progress</param>
+        /// <param name="progressThusFar">Used to report back progress</param>
+        /// <param name="maxAddableProgress">Used to report back progress</param>
+        /// <returns></returns>
         internal async Task<UploadResultV2> UploadSingleFile(string transferId,
                                                           SingleFileTransferResponseData singleFileTransferData,
                                                           IProgress<ProgressReportV2> progress,
@@ -187,7 +199,7 @@ namespace WeTransferUploader.V2
             var fullPath = singleFileTransferData.FullPath;
             progress.Report(new ProgressReportV2($"Uploading '{Path.GetFileName(fullPath)}'...", (double)progressThusFar));
 
-            // Split the files into the requested number of chuncks.
+            // Split the files into the requested number of chuncks. The API has sent info on what chunksize to use when the transfer request was created.
             var currentStage = UploadResultV2.Stage.SplitFiles;
             //Logger.Debug("Splitting files...");
             await Task.Run(() => IOUtil.SplitFile(fullPath, singleFileTransferData.ChunkData.ChunkSize, ChunkDirectory));
@@ -198,6 +210,8 @@ namespace WeTransferUploader.V2
             // Acquire the upload urls for each chunck of each file.
             currentStage = UploadResultV2.Stage.UploadUrl;
             //Logger.Debug("Requesting upload urls...");
+
+            //Store the upload urls for each chunk.
             var uploadUrls = new List<FilePartUploadUrlResponse>();
             for (var i = 1; i <= singleFileTransferData.ChunkData.NumberOfParts; i++)
             {
@@ -213,7 +227,7 @@ namespace WeTransferUploader.V2
             progressThusFar += maxAddableProgress / 4;
             maxAddableProgress = maxAddableProgress * 3 / 4;
 
-            // Upload each chunk!
+            // Upload each chunk.
             currentStage = UploadResultV2.Stage.Upload;
             //Logger.Debug("Uploading");
             foreach (var rp in uploadUrls)
@@ -231,7 +245,7 @@ namespace WeTransferUploader.V2
             }
             //
 
-            // Signal to the web API that we are finished.
+            // Signal to the web API that we have finished.
             currentStage = UploadResultV2.Stage.Complete;
             var completeResponse = await CompleteSingleFileUpload(transferId, singleFileTransferData.Id,uploadUrls.Count);
 
@@ -269,10 +283,12 @@ namespace WeTransferUploader.V2
         }
 
         /// <summary>
-        /// Creates a new, empty transfer object. We will add files later.
+        /// Creates a new transfer. The files to upload must be specified up front.
         /// </summary>
-        /// <param name="creationRequest">A wrapper around the (arbitrary)name for the transfer</param>
+        /// <param name="fileRequest">A class containing data on the global transfer as well as on the separate files to upload.</param>
         /// <returns></returns>
+        /// <remarks>The full paths to the files are added to the API's response in order to keep track of them.
+        ///          Note: currently the implementation will fail when two files have the same name, but are located in different directories!</remarks>
         internal async Task<TransferRequestResponseV2> CreateTransfer(FileUploadRequestContent fileRequest)
         {
             using (var client = new HttpClient())
@@ -291,33 +307,10 @@ namespace WeTransferUploader.V2
         }
 
         /// <summary>
-        /// Tells the web API which files we want to add.
-        /// </summary>
-        /// <param name="transferId">The id of the new transfer we created.</param>
-        /// <param name="container">A container for the the full paths to the files that we want to upload.</param>
-        /// <returns></returns>
-        private async Task<AddItemResponse[]> AddTransferItems(string transferId, TransferItemContainer container)
-        {
-            throw new NotImplementedException();
-            //using (var client = new HttpClient())
-            //{
-            //    var request = CreateRequest($"https://dev.wetransfer.com/v1/transfers/{transferId}/items", HttpMethod.Post);
-            //    AddBearerToken(request);
-
-            //    var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(container));
-            //    var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
-            //    request.Content = httpContent;
-
-            //    var addedTransferItemResponse = await WaitForResponseArray<AddItemResponse>(client, request);
-
-            //    return addedTransferItemResponse;
-            //}
-        }
-
-        /// <summary>
         /// Requests an upload url for each chunk of a file.
         /// </summary>
-        /// <param name="uploadData">Contains data about the chunk that the web API needs.</param>
+        /// <param name="transferId">The id of the global transfer.</param>
+        /// <param name="fileData">A class containing data on the file to be uploaded.</param>
         /// <param name="partNumber">The partnumber of the chunk.</param>
         /// <returns></returns>
         internal async Task<FilePartUploadUrlResponse> RequestUploadUrl(string transferId, 
@@ -331,8 +324,6 @@ namespace WeTransferUploader.V2
                 response.PartNumber = partNumber;
                 return response;
             }
-
-            
            
         }
 
