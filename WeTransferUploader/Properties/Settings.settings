@@ -8,5 +8,11 @@
     <Setting Name="TokenCreationDate" Type="System.DateTime" Scope="User">
       <Value Profile="(Default)">1900-01-01</Value>
     </Setting>
+    <Setting Name="TokenV2" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="TokenV2CreationDate" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">1900-01-01</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

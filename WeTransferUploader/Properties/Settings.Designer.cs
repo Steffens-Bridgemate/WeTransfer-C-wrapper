@@ -46,5 +46,29 @@ namespace WeTransferUploader.Properties {
                 this["TokenCreationDate"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TokenV2 {
+            get {
+                return ((string)(this["TokenV2"]));
+            }
+            set {
+                this["TokenV2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1900-01-01")]
+        public global::System.DateTime TokenV2CreationDate {
+            get {
+                return ((global::System.DateTime)(this["TokenV2CreationDate"]));
+            }
+            set {
+                this["TokenV2CreationDate"] = value;
+            }
+        }
     }
 }

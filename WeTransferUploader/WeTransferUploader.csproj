@@ -49,8 +49,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communicator.cs" />
+    <Compile Include="ProgressReport.cs" />
+    <Compile Include="UploadResult.cs" />
+    <Compile Include="V2\CommunicatorV2.cs" />
     <Compile Include="IOUtil.cs" />
     <Compile Include="JsonRequests.cs" />
+    <Compile Include="V2\HttpRequests.cs" />
+    <Compile Include="V2\ProgressReport.cs" />
+    <Compile Include="V2\RequestContentsV2.cs" />
     <Compile Include="JsonResponses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -58,6 +64,10 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="V2\JsonResponsesV2.cs" />
+    <Compile Include="V2\RequestUris.cs" />
+    <Compile Include="V2\SingleFileUploadData.cs" />
+    <Compile Include="V2\UploadResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -70,5 +80,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
