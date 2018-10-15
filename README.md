@@ -19,7 +19,7 @@ The Program.cs file in the Console application gives an example how to use the C
   <br/>
 // The result.DownloadUrl can be used by the recipient to download the uploaded files.
 
-HOW TO USE THE V2 API
+HOW TO USE THE V2 API <br/>
 Unit tests document pretty much how the TransferApiCommunicator and BoardApiCommunicator classes should be used.
 
 TRANSFERAPI
