@@ -55,6 +55,14 @@ namespace WeTransferUploader.V2
                 base.Content = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, JsonMediaType);
             }
         }
+
+        /// <summary>
+        /// Adds dummy content in order to ensure that a Content-Type header is added.
+        /// </summary>
+        protected void AddDummyData()
+        {
+            base.Content = new StringContent("", Encoding.UTF8, JsonMediaType);
+        }
     }
 
     internal class ApiKeyedWeTransferHttpRequestMessage<TContent> : WeTransferHttpRequestMessage<TContent> where TContent : class
@@ -135,16 +143,106 @@ namespace WeTransferUploader.V2
     internal class TransferCompleteRequestV2 : TokenizedWeTransferHttpRequestMessage<object>
     {
         public TransferCompleteRequestV2(string apiKey,
-                                                 string token,
-                                                 string transferId) :base(string.Format(RequestUrisV2.TransferComplete, transferId),
-                                                                     HttpMethod.Put,
-                                                                     apiKey,
-                                                                     token,
-                                                                     content: null)
+                                         string token,
+                                         string transferId) :base(string.Format(RequestUrisV2.TransferComplete, transferId),
+                                                                  HttpMethod.Put,
+                                                                  apiKey,
+                                                                  token,
+                                                                  content: null)
            
         {
             //In order to get the Content-Type header added to the request some dummy content must be created.
-            base.Content = new StringContent("", Encoding.UTF8, JsonMediaType);
+            AddDummyData();
         }
     }
+
+    #region "BoardApiSpecificRequests"
+    internal class CreateBoardRequest: TokenizedWeTransferHttpRequestMessage<BoardCreationRequestContent>
+    {
+        public CreateBoardRequest(string apiKey,
+                                  string token,
+                                  string name,
+                                  string description=null):
+            base(RequestUrisV2.CreateBoard,
+            HttpMethod.Post,
+            apiKey,token,
+            new BoardCreationRequestContent(name,description))
+        { }
+    }
+
+    internal class GetBoardInfoRequest: TokenizedWeTransferHttpRequestMessage<object>
+    {
+        public GetBoardInfoRequest(string apiKey,
+                                   string token,
+                                   string boardId) :
+           base(string.Format( RequestUrisV2.GetBoardInfo,boardId),
+           HttpMethod.Get,
+           apiKey, 
+           token,
+           content:null)
+        { }
+    }
+
+    internal class AddLinksRequest:TokenizedWeTransferHttpRequestMessage<LinkRequestContent[]>
+    {
+        public AddLinksRequest(string apiKey,
+                               string token,
+                               string boardId,
+                               List<(string url,string title)> links):
+            base(string.Format( RequestUrisV2.AddLinks,boardId),
+                 HttpMethod.Post,
+                 apiKey,
+                 token,
+                 (new AddLinksRequestContent(links)).Links)
+        { }
+    }
+
+    internal class AddFilesRequest : TokenizedWeTransferHttpRequestMessage<FileRequestContent[]>
+    {
+        public AddFilesRequest(string apiKey,
+                               string token,
+                               string boardId,
+                               List<(string name, int size,string fullPath)> files) :
+            base(string.Format(RequestUrisV2.AddFiles, boardId),
+                 HttpMethod.Post,
+                 apiKey,
+                 token,
+                 (new AddFilesRequestContent(files)).Files)
+        { }
+    }
+
+    internal class BoardFilePartUploadUrlRequestV2 : TokenizedWeTransferHttpRequestMessage<object>
+    {
+        public BoardFilePartUploadUrlRequestV2(string apiKey,
+                                               string token,
+                                               string boardId,
+                                               string fileId,
+                                               string multiPartFileId,
+                                               int partNumber) :
+            base(string.Format(RequestUrisV2.BoardFileUploadUrl, boardId, fileId, partNumber,multiPartFileId),
+                               HttpMethod.Get,
+                               apiKey,
+                               token,
+                               content: null)
+        { }
+    }
+
+    internal class BoardFileUploadCompleteRequestV2 : TokenizedWeTransferHttpRequestMessage<object>
+    {
+        public BoardFileUploadCompleteRequestV2(string apiKey,
+                                                 string token,
+                                                 string boardId,
+                                                 string fileId) : 
+            base(string.Format(RequestUrisV2.BoardFileUploadComplete, boardId, fileId),
+                 HttpMethod.Put,
+                 apiKey,
+                 token,
+                 content: null)
+        {
+            //In order to get the Content-Type header added to the request some dummy content must be created.
+            AddDummyData();
+        }
+
+    }
+    #endregion
 }

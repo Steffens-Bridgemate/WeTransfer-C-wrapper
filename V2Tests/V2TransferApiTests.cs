@@ -13,10 +13,10 @@ using WeTransferUploader.V2;
 namespace V2Tests
 {
     [TestClass]
-    public class V2Tests
+    public class V2TransferApiTests
     {
 
-        private const string ApiKey= "Fill in your own API-key here";
+        private const string ApiKey= null;//Fill in your own Api-Key
         private CommunicatorV2 _communicator;
         private string _appPath;
         private string _user;
@@ -126,7 +126,8 @@ namespace V2Tests
                 var info = new FileInfo(Path.Combine(_appPath, "Chunks", fileName));
                 files.Add(info);
             }
-           var result=  _communicator.UploadFiles(files.Select(file => file.FullName), "Testtransfer",_user).Result;
+            var result=  _communicator.UploadFiles(files.Select(file => file.FullName), "Testtransfer",_user).Result;
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result.DownloadUrl));
             Debug.Print(result.DownloadUrl);
         }
     }

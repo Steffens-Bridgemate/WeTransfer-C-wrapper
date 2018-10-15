@@ -39,7 +39,7 @@ namespace WeTransferUploader.V2
         public SingleFileTransferResponseData[] Files { get; set; }
     }
 
-    public class SingleFileTransferResponseData
+    public class SingleFileTransferResponseData:JsonResponseV2
     {
         [JsonProperty("id")]
         public string Id { get; set; }
@@ -64,6 +64,9 @@ namespace WeTransferUploader.V2
 
         [JsonProperty("chunk_size")]
         public int ChunkSize { get; set; }
+
+        [JsonProperty("id")]
+        public string Id { get; set; }
     }
 
     public class FilePartUploadUrlResponse:JsonResponseV2
@@ -105,7 +108,71 @@ namespace WeTransferUploader.V2
 
         [JsonProperty("url")]
         public string DownloadUrl { get; set; }
-
-
     }
+
+    #region "BoardApi specific responses"
+    public class BoardCreatedResponse : JsonResponseV2
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
+        [JsonProperty("state")]
+        public string State { get; set; }
+
+        [JsonProperty("url")]
+        public string BoardUrl { get; set; }
+    }
+
+    public class AddLinksResponse:JsonResponseV2
+    {
+        public AddLinkResponse[] LinksData { get; set; }
+    }
+
+    public class AddLinkResponse:JsonResponseV2
+    {
+
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        [JsonProperty("url")]
+        public string Url { get; set; }
+
+        [JsonProperty("meta")]
+        public LinkResponseMetaData MetaData{get;set;}
+    }
+
+    public class LinkResponseMetaData
+    {
+        [JsonProperty("title")]
+        public string Title { get; set; }
+    }
+
+    public class BoardInfoResponse:JsonResponseV2
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        [JsonProperty("state")]
+        public string State { get; set; }
+
+        [JsonProperty("url")]
+        public string Url { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
+        [JsonProperty("items")]
+        public dynamic Items { get; set; }
+    }
+
+    #endregion
 }

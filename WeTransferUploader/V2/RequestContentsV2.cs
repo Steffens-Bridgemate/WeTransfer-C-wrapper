@@ -21,7 +21,6 @@ namespace WeTransferUploader.V2
    
     }
 
-
     internal class FileUploadRequestContent
     {
         public FileUploadRequestContent(string message, FileRequestContent[] files)
@@ -81,4 +80,64 @@ namespace WeTransferUploader.V2
         [JsonProperty("part_numbers")]
         public int NumberOfParts { get; set; }
     }
+
+    #region "BoardApi specific request content classes"
+
+    internal class BoardCreationRequestContent
+    {
+        public BoardCreationRequestContent(string name,string description=null)
+        {
+            Name = name ?? string.Empty;
+            Description = description ?? string.Empty;
+        }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("description")]
+        public string Description { get; set; }
+    }
+
+    internal class AddLinksRequestContent
+    {
+        public AddLinksRequestContent(IEnumerable<(string url,string title)> links):
+            this(links.Select(link=>new LinkRequestContent(link.url,link.title)).ToArray())
+        {}
+
+        public AddLinksRequestContent(LinkRequestContent[] links)
+        {
+            Links = links ?? throw new ArgumentNullException(nameof(links));
+        }
+        public LinkRequestContent[] Links { get; set; }
+    }
+
+    internal class LinkRequestContent
+    {
+        public LinkRequestContent(string url, string title)
+        {
+            Url = url;
+            Title = title;
+        }
+
+        [JsonProperty("url")]
+        public string Url { get; set; }
+
+        [JsonProperty("title")]
+        public string Title { get; set; }
+    }
+
+    internal class AddFilesRequestContent
+    {
+        public AddFilesRequestContent(IEnumerable<(string name, int size,string fullPath)> files) :
+            this(files.Select(file => new FileRequestContent(file.name, file.size,file.fullPath)).ToArray())
+        { }
+
+        public AddFilesRequestContent(FileRequestContent[] files)
+        {
+            Files = files ?? throw new ArgumentNullException(nameof(files));
+        }
+        public FileRequestContent[] Files { get; set; }
+    }
+
+    #endregion
 }
