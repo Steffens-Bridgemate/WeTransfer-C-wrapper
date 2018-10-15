@@ -13,7 +13,7 @@ namespace V2Tests
     [TestClass]
     public class V2BoardApiTests
     {
-        private const string ApiKey = "dc6NQTPKkR1qylk82Le622OICFayEY0s6rpvQYM7";
+        private const string ApiKey = null;
         private BoardApiCommunicator _communicator;
         private string _appPath;
         private string _user;
