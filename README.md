@@ -22,8 +22,9 @@ The Program.cs file in the Console application gives an example how to use the C
 HOW TO USE THE V2 API <br/>
 Unit tests document pretty much how the TransferApiCommunicator and BoardApiCommunicator classes should be used.
 
-TRANSFERAPI
-  public void UploadTwoFiles()
+TRANSFERAPI <br/>
+
+        public void UploadTwoFiles()
         {
             //Act
             var files = new List<FileInfo>();
@@ -39,7 +40,8 @@ TRANSFERAPI
 
 BOARDAPI
 // boardResponse.Id is the Board Id. This id is needed for the calls to add files, add links and get Board info.
- public void AddTwoFilesToBoard()
+ 
+        public void AddTwoFilesToBoard()
         {
             //Arrange
             BoardApiCommunicator.ClearToken();
