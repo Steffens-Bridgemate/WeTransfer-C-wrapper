@@ -51,7 +51,7 @@
     <Compile Include="Communicator.cs" />
     <Compile Include="ProgressReport.cs" />
     <Compile Include="UploadResult.cs" />
-    <Compile Include="V2\CommunicatorV2.cs" />
+    <Compile Include="V2\BoardApiCommunicator.cs" />
     <Compile Include="IOUtil.cs" />
     <Compile Include="JsonRequests.cs" />
     <Compile Include="V2\HttpRequests.cs" />
@@ -67,7 +67,9 @@
     <Compile Include="V2\JsonResponsesV2.cs" />
     <Compile Include="V2\RequestUris.cs" />
     <Compile Include="V2\SingleFileUploadData.cs" />
+    <Compile Include="V2\TransferApiCommunicator.cs" />
     <Compile Include="V2\UploadResult.cs" />
+    <Compile Include="V2\WeTransferCommunicator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

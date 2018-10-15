@@ -16,8 +16,8 @@ namespace V2Tests
     public class V2TransferApiTests
     {
 
-        private const string ApiKey= null;//Fill in your own Api-Key
-        private CommunicatorV2 _communicator;
+        private const string ApiKey= "dc6NQTPKkR1qylk82Le622OICFayEY0s6rpvQYM7";
+        private TransferApiCommunicator _communicator;
         private string _appPath;
         private string _user;
         private string _token;
@@ -30,8 +30,8 @@ namespace V2Tests
             _appPath = AppDomain.CurrentDomain.BaseDirectory;
             _user = "Tester";
             var chunkDirectory = Path.Combine(_appPath, "Chunks");
-            _communicator = new CommunicatorV2(ApiKey,chunkDirectory);
-            if (CommunicatorV2.Token == null)
+            _communicator = new TransferApiCommunicator(ApiKey,chunkDirectory);
+            if (TransferApiCommunicator.Token == null)
                 _communicator.GetToken(_user).Wait();
         }
 
@@ -53,9 +53,9 @@ namespace V2Tests
         public void GetToken()
         {
             //Arrange
-            CommunicatorV2.ClearToken();
-            var token = CommunicatorV2.Token;
-            Assert.IsNull(CommunicatorV2.Token);
+            TransferApiCommunicator.ClearToken();
+            var token = TransferApiCommunicator.Token;
+            Assert.IsNull(TransferApiCommunicator.Token);
 
             //Act
             var response = _communicator.GetToken(_user).Result;

@@ -13,8 +13,8 @@ namespace V2Tests
     [TestClass]
     public class V2BoardApiTests
     {
-        private const string ApiKey = null; //Fill in your own Api-Key
-        private CommunicatorV2 _communicator;
+        private const string ApiKey = "dc6NQTPKkR1qylk82Le622OICFayEY0s6rpvQYM7";
+        private BoardApiCommunicator _communicator;
         private string _appPath;
         private string _user;
         private string _token;
@@ -27,8 +27,8 @@ namespace V2Tests
            _appPath = AppDomain.CurrentDomain.BaseDirectory;
            _user = "BoardApiTester";
             var chunkDirectory = Path.Combine(_appPath, "Chunks");
-           _communicator = new CommunicatorV2(ApiKey, chunkDirectory);
-            if (CommunicatorV2.Token == null)
+           _communicator = new BoardApiCommunicator(ApiKey, chunkDirectory);
+            if (TransferApiCommunicator.Token == null)
                 _communicator.GetToken(_user).Wait();
         }
         [TestMethod]
@@ -64,7 +64,7 @@ namespace V2Tests
         public void AddTwoFilesToBoard()
         {
             //Arrange
-            CommunicatorV2.ClearToken();
+            TransferApiCommunicator.ClearToken();
             _communicator.GetToken("André Steffens").Wait();
             var boardResponse = _communicator.CreateBoard(_user, "My beautiful board").Result;
 
@@ -78,7 +78,7 @@ namespace V2Tests
             }
 
             //Act
-            var fileUploadResponse = _communicator.UploadFilesToBoard(boardResponse.Id, infos).Result;
+            var fileUploadResponse = _communicator.UploadFilesToBoard(boardResponse.Id, infos,_user).Result;
 
             //Assert
             Assert.AreEqual(UploadResultV2.ResultCode.Success, fileUploadResponse.Result);
