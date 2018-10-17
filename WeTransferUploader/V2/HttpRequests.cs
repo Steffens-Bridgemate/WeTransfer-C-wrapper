@@ -41,12 +41,13 @@ namespace WeTransferUploader.V2
             base.Method = method;
             base.RequestUri = new Uri(requestUri);
 
-            if (method == HttpMethod.Get )
-            {
-                AllowContentTypeHeaderOnGetCalls();
-                base.Headers.TryAddWithoutValidation(ContentType, JsonMediaType);
-            }
-            else
+            //This safeguard is no longer necessary.
+            //if (method == HttpMethod.Get )
+            //{
+            //    AllowContentTypeHeaderOnGetCalls();
+            //    base.Headers.TryAddWithoutValidation(ContentType, JsonMediaType);
+            //}
+            //else
                 base.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(JsonMediaType));
 
            
